@@ -50,11 +50,15 @@ Count=0
 [PLDS]
 Count=0
 [Useses]
-Count=4
+Count=8
 File0=C_String
 File1=Lcd
 File2=Lcd_Constants
 File3=UART
+File4=ADC
+File5=C_Stdlib
+File6=C_Type
+File7=Conversions
 [EXPANDED NODES]
 Node1=Sources
 Count=1

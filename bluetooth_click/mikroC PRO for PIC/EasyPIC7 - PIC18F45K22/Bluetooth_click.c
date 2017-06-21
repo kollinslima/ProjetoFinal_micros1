@@ -33,6 +33,7 @@
 
 #include "BT_Routines.h"
 
+
 // responses to parse
 const BT_CMD  = 1;
 const BT_AOK  = 2;
@@ -56,6 +57,7 @@ sbit LCD_D7 at LATB3_bit;
 // End Lcd module connections
 
 char txt[16];
+char txtD[16];
 unsigned short i, tmp, DataReady;
 char CMD_mode;
 
@@ -65,8 +67,14 @@ char responseID, response = 0;
 
 char porta_selected[] = "PORTA";
 char portb_selected[] = "PORTB";
+
 char portd_selected[] = "PORTD";
+
 char porte_selected[] = "PORTE";
+
+int portd_led = 0;
+int porta_ad = 0;
+char *adc_value[16];
 
 // Uart Rx interrupt handler
 void interrupt(){
@@ -223,16 +231,51 @@ char BT_Get_Response() {
     return 0;
 }
 
-void portD_handle(){
 
-     ANSELD = 0;
-     TRISD = 0;
-     LATD = 0xFF;
+void writeLCD(char *msg){
 
+     int i = 0;
+     
+      Lcd_Cmd(_LCD_CLEAR);
+
+      while (msg[i] != 0) {
+       Lcd_Chr_CP(msg[i]);       // Displaying the received text on the LCD
+       i++;                      // Increment counter
+       }
 }
+
+double potencia(int base, int expoente){
+       int i = 0;
+       double result = 1;
+       
+       for(i = 0; i<expoente; i++){
+             result *= base;
+       }
+       
+       return result;
+}
+
+int convertToInt(char *str){
+ int conv = 0,i;
+ int len = strlen(str);
+ 
+ for (i = 0;i<len;i++){
+     conv += (str[i] - 48) * potencia(10,(len-1)-i);
+ }
+ return conv;
+}
+
 
 void main() {
   ANSELC = 0;                   // Configure PORTC pins as digital
+  ANSELA = 0x01;     //PORTA RA0 COMO ENTRADA ANALOGICA
+  ANSELD = 0;
+  
+  TRISD = 0x00;
+  TRISA = 0x01;      //RA0 como entrada
+  LATD = 0x00;
+  
+  ADC_init();
 
   // Initialize variables
   CMD_mode = 1;
@@ -258,8 +301,7 @@ void main() {
   Delay_ms(1500);
 
   Lcd_Cmd(_LCD_CLEAR);
-  Lcd_Out(1,1,"Connecting!");
-  Lcd_Out(2,1,"Please, wait...");
+  Lcd_Out(1,1,"Conectanto...");
   Delay_ms(1500);
  
   // Configure BlueTooth-Click module
@@ -274,13 +316,14 @@ void main() {
   DataReady = 0;                // Data not received
 
   LCD_Cmd(_LCD_CLEAR);          // Clear display
-  Lcd_Out(1,1,"Connected!");    // Display message
+  Lcd_Out(1,1,"Conectado!");    // Display message
   Delay_ms(1000);
   
-  UART1_Write_Text("Bluetooth Click Connected!");         //  Send message on connection
+  //UART1_Write_Text("Bluetooth Click Connected!");         //  Send message on connection
   UART1_Write(13);              // CR
   Lcd_Cmd(_LCD_CLEAR);          // Clear display
-  Lcd_Out(1,1,"Receiving...");  // Display message
+  Lcd_Out(1,1,"Aguardando");  // Display message
+  Lcd_Out(2,1,"Comando...");  // Display message
   
   while (1) {
     i = 0;                      // Initialize counter
@@ -293,18 +336,29 @@ void main() {
     GIE_bit  = 0;               // Interrupts forbiden
     DataReady = 0;              // Data not received
 
-    LCD_Cmd(_LCD_CLEAR);        // Clear display
-//    Lcd_Out(1,1,"Received:");   // Display message
-    Lcd_Cmd(_LCD_FIRST_ROW);   // Write in second row
-    i = 0;                      // Reset counter
-    
-    while (txt[i] != 0) {
-      Lcd_Chr_CP(txt[i]);       // Displaying the received text on the LCD
-      i++;                      // Increment counter
-    }                                          
 
-     if(!memcmp(txt,portd_selected,5)){
-       portD_handle();
+     if(!memcmp(txt,porta_selected,5)){
+      porta_ad = 1;
+      writeLCD(txt);
+    }
+     else if(!memcmp(txt,portd_selected,5)){
+      portd_led = 1;
+      writeLCD(txt);
+    }
+    else if(porta_ad){
+         unsigned int read = ADC_Read(0);
+         read = ((read*50.0)/1023) * 10;
+         WordToStr(read,adc_value);
+       UART1_Write_Text(adc_value);
+    }
+    else if(portd_led){
+        LATD = convertToInt(txt);
+     }
+     else {
+      portd_led = 0;
+      Lcd_Cmd(_LCD_CLEAR);          // Clear display
+      Lcd_Out(1,1,"Aguardando");  // Display message
+      Lcd_Out(2,1,"Comando...");  // Display message
     }
     
   }

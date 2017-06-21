@@ -21,5 +21,9 @@
 
         </activity>
 
+        <activity android:name=".PortD_Leds"/>
+
+        <activity android:name=".PortA_AD"/>
+
     </application>
 </manifest>

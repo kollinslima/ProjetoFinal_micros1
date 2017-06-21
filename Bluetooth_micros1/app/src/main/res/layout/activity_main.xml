@@ -86,6 +86,27 @@
     </LinearLayout>
 
     <Button
+        android:id="@+id/btnPortA"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="PORTA"
+        android:onClick="portA_control"/>
+
+    <Button
+        android:id="@+id/btnPortB"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="PORTB"
+        android:onClick="portD_control"/>
+
+    <Button
+        android:id="@+id/btnPortC"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="PORTC"
+        android:onClick="portD_control"/>
+
+    <Button
         android:id="@+id/btnPortD"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -93,20 +114,10 @@
         android:onClick="portD_control"/>
 
     <Button
+        android:id="@+id/btnPortE"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/btnLed0"
-        android:onClick="led0"
-        android:text="LED0"/>
-
-    <ListView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/listView"
-        android:layout_alignParentBottom="true"
-        android:layout_alignLeft="@+id/button"
-        android:layout_alignStart="@+id/button"
-        android:layout_below="@+id/textView2" />
-
+        android:text="PORTE"
+        android:onClick="portD_control"/>
 
 </LinearLayout>

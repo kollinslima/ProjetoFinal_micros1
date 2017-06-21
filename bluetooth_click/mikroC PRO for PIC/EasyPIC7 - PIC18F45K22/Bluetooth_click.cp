@@ -2,7 +2,7 @@
 #line 1 "f:/documents/pic18f45k22/bluetooth_click/mikroc pro for pic/easypic7 - pic18f45k22/bt_routines.h"
 char BT_Get_Response();
 void BT_Configure();
-#line 37 "F:/Documents/PIC18f45k22/bluetooth_click/mikroC PRO for PIC/EasyPIC7 - PIC18F45K22/Bluetooth_click.c"
+#line 38 "F:/Documents/PIC18f45k22/bluetooth_click/mikroC PRO for PIC/EasyPIC7 - PIC18F45K22/Bluetooth_click.c"
 const BT_CMD = 1;
 const BT_AOK = 2;
 const BT_CONN = 3;
@@ -25,6 +25,7 @@ sbit LCD_D7 at LATB3_bit;
 
 
 char txt[16];
+char txtD[16];
 unsigned short i, tmp, DataReady;
 char CMD_mode;
 
@@ -34,8 +35,14 @@ char responseID, response = 0;
 
 char porta_selected[] = "PORTA";
 char portb_selected[] = "PORTB";
+
 char portd_selected[] = "PORTD";
+
 char porte_selected[] = "PORTE";
+
+int portd_led = 0;
+int porta_ad = 0;
+char *adc_value[16];
 
 
 void interrupt(){
@@ -43,7 +50,7 @@ void interrupt(){
  tmp = UART1_Read();
 
  if (CMD_mode){
-#line 93 "F:/Documents/PIC18f45k22/bluetooth_click/mikroC PRO for PIC/EasyPIC7 - PIC18F45K22/Bluetooth_click.c"
+#line 101 "F:/Documents/PIC18f45k22/bluetooth_click/mikroC PRO for PIC/EasyPIC7 - PIC18F45K22/Bluetooth_click.c"
  switch (BT_state) {
  case 0: {
  response = 0;
@@ -177,32 +184,51 @@ char BT_Get_Response() {
  return 0;
 }
 
-void portD_handle(){
 
- ANSELD = 0;
- TRISD = 0;
- LATD = 0xFF;
+void writeLCD(char *msg){
 
- while (1) {
- i = 0;
+ int i = 0;
 
- memset(txt, 0, 16);
- GIE_bit = 1;
+ Lcd_Cmd(_LCD_CLEAR);
 
- while (!DataReady);
+ while (msg[i] != 0) {
+ Lcd_Chr_CP(msg[i]);
+ i++;
+ }
+}
 
- GIE_bit = 0;
- DataReady = 0;
+double potencia(int base, int expoente){
+ int i = 0;
+ double result = 1;
 
- LATD = 0x00;
-
+ for(i = 0; i<expoente; i++){
+ result *= base;
  }
 
-
+ return result;
 }
+
+int convertToInt(char *str){
+ int conv = 0,i;
+ int len = strlen(str);
+
+ for (i = 0;i<len;i++){
+ conv += (str[i] - 48) * potencia(10,(len-1)-i);
+ }
+ return conv;
+}
+
 
 void main() {
  ANSELC = 0;
+ ANSELA = 0x01;
+ ANSELD = 0;
+
+ TRISD = 0x00;
+ TRISA = 0x01;
+ LATD = 0x00;
+
+ ADC_init();
 
 
  CMD_mode = 1;
@@ -228,8 +254,7 @@ void main() {
  Delay_ms(1500);
 
  Lcd_Cmd(_LCD_CLEAR);
- Lcd_Out(1,1,"Connecting!");
- Lcd_Out(2,1,"Please, wait...");
+ Lcd_Out(1,1,"Conectanto...");
  Delay_ms(1500);
 
 
@@ -244,13 +269,14 @@ void main() {
  DataReady = 0;
 
  LCD_Cmd(_LCD_CLEAR);
- Lcd_Out(1,1,"Connected!");
+ Lcd_Out(1,1,"Conectado!");
  Delay_ms(1000);
 
- UART1_Write_Text("Bluetooth Click Connected!");
+
  UART1_Write(13);
  Lcd_Cmd(_LCD_CLEAR);
- Lcd_Out(1,1,"Receiving...");
+ Lcd_Out(1,1,"Aguardando");
+ Lcd_Out(2,1,"Comando...");
 
  while (1) {
  i = 0;
@@ -263,18 +289,29 @@ void main() {
  GIE_bit = 0;
  DataReady = 0;
 
- LCD_Cmd(_LCD_CLEAR);
 
- Lcd_Cmd(_LCD_FIRST_ROW);
- i = 0;
-
- while (txt[i] != 0) {
- Lcd_Chr_CP(txt[i]);
- i++;
+ if(!memcmp(txt,porta_selected,5)){
+ porta_ad = 1;
+ writeLCD(txt);
  }
-
- if(!memcmp(txt,portd_selected,5)){
- portD_handle();
+ else if(!memcmp(txt,portd_selected,5)){
+ portd_led = 1;
+ writeLCD(txt);
+ }
+ else if(porta_ad){
+ unsigned int read = ADC_Read(0);
+ read = ((read*50.0)/1023) * 10;
+ WordToStr(read,adc_value);
+ UART1_Write_Text(adc_value);
+ }
+ else if(portd_led){
+ LATD = convertToInt(txt);
+ }
+ else {
+ portd_led = 0;
+ Lcd_Cmd(_LCD_CLEAR);
+ Lcd_Out(1,1,"Aguardando");
+ Lcd_Out(2,1,"Comando...");
  }
 
  }

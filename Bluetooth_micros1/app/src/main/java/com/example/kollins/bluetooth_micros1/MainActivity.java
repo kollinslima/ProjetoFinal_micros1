@@ -25,7 +25,7 @@ import java.util.Set;
 import java.util.concurrent.locks.Lock;
 
 public class MainActivity extends Activity {
-    Button b1, b2, b3, b4, b5, b6,portD,led0;
+    Button b1, b2, b3, b4, b5, b6,portD,portA;
     private BluetoothAdapter BA;
     private Set<BluetoothDevice> pairedDevices;
     ListView lv;
@@ -50,51 +50,19 @@ public class MainActivity extends Activity {
         b3 = (Button) findViewById(R.id.button3);
         b4 = (Button) findViewById(R.id.button4);
         b5 = (Button) findViewById(R.id.button5);
-        b6 = (Button) findViewById(R.id.button6);
         portD = (Button) findViewById(R.id.btnPortD);
-        led0 = (Button) findViewById(R.id.btnLed0);
+        portA = (Button) findViewById(R.id.btnPortA);
 
-        b6.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                try {
-                    write("Android");
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
+
 
         b5.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (pairedDevices.size() > 0) {
                     devices = (Object[]) pairedDevices.toArray();
-                    Log.i("Bluetooth", devices.toString());
-                    device = (BluetoothDevice) devices[0];
-                    uuids = device.getUuids();
 
-
-                    new Thread(new Runnable() {
-                        @Override
-                        public void run() {
-                            try {
-                                socket = device.createRfcommSocketToServiceRecord(uuids[0].getUuid());
-                                socket.connect();
-                                outputStream = socket.getOutputStream();
-                                inputStream = socket.getInputStream();
-                                Log.i("Teste", "Conexão realizada");
-
-                                byte teste = (byte) inputStream.read();
-                                Log.i("Teste", "byte lido: " + teste);
-
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
-
-                        }
-                    }).start();
-
+                    Thread bluetoothCom = new Thread(new Comunicacao(devices));
+                    bluetoothCom.start();
 
                 }
             }
@@ -102,7 +70,7 @@ public class MainActivity extends Activity {
 
         BA = BluetoothAdapter.getDefaultAdapter();
         pairedDevices = BA.getBondedDevices();
-        lv = (ListView) findViewById(R.id.listView);
+
     }
 
     public void on(View v) {
@@ -126,26 +94,6 @@ public class MainActivity extends Activity {
         startActivityForResult(getVisible, 0);
     }
 
-    public void write(String s) throws IOException {
-
-        final String msg = s;
-
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    Log.i("Teste", "Enviando");
-                    outputStream.write(msg.getBytes());
-                    outputStream.write(FINAL);
-                    Log.i("Teste", "Enviado");
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }).start();
-
-    }
-
     public void list(View v) {
 
         ArrayList list = new ArrayList();
@@ -159,10 +107,14 @@ public class MainActivity extends Activity {
     }
 
     public void portD_control(View view) throws IOException {
-        write("PORTD SELECTED");
+        Comunicacao.setOutputBuffer("PORTD SELECTED");
+        Intent portD = new Intent(this, PortD_Leds.class);
+        startActivity(portD);
     }
 
-    public void led0(View view) throws IOException {
-        write("0");
+    public void portA_control(View view) {
+        Comunicacao.setOutputBuffer("PORTA SELECTED");
+        Intent portA = new Intent(this, PortA_AD.class);
+        startActivity(portA);
     }
 }

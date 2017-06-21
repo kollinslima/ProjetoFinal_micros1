@@ -43,6 +43,7 @@ abden_bit
 abdovf
 abdovf_baud1con_bit
 abdovf_bit
+abs
 access
 ackdt
 ackdt_bit
@@ -62,6 +63,11 @@ acqt1
 acqt1_bit
 acqt2
 acqt2_bit
+adc_get_sample
+adc_get_sample_ptr
+adc_init
+adc_read
+adc_value
 adcmd
 adcmd_bit
 adcon0
@@ -217,6 +223,9 @@ anselb
 anselc
 anseld
 ansele
+atof
+atoi
+atol
 b0
 b1
 b2
@@ -232,6 +241,8 @@ baudcon
 baudcon1
 baudcon2
 baudctl
+bcd2dec
+bcd2dec16
 bcl1ie
 bcl1ie_bit
 bcl1if
@@ -281,6 +292,8 @@ bt_end
 bt_get_response
 bt_state
 byte2double
+bytetohex
+bytetostr
 c
 c_bit
 c12in0m
@@ -568,6 +581,7 @@ cmp2md
 cmp2md_bit
 comfrem
 compare_double
+converttoint
 cren
 cren_bit
 cren_rc1sta_bit
@@ -668,6 +682,8 @@ dc5b0
 dc5b0_bit
 dc5b1
 dc5b1_bit
+dec2bcd
+dec2bcd16
 delay_100ms
 delay_10ms
 delay_10us
@@ -685,6 +701,7 @@ delay_cyc
 dhen
 dhen_bit
 dhen_ssp1con3_bit
+div
 div_16x16_s
 div_16x16_s_l
 div_16x16_u
@@ -778,6 +795,7 @@ ferr1_bit
 ferr2
 ferr2_bit
 fixsign32
+floattostr
 flt0
 flt0_bit
 free
@@ -903,6 +921,9 @@ intedg2_bit
 interrupt
 intsrc
 intsrc_bit
+inttohex
+inttostr
+inttostrwithzeros
 iocb
 iocb4
 iocb4_bit
@@ -933,6 +954,16 @@ irng1
 irng1_bit
 irvst
 irvst_bit
+isalnum
+isalpha
+iscntrl
+isdigit
+isgraph
+islower
+ispunct
+isspace
+isupper
+isxdigit
 itrim0
 itrim0_bit
 itrim1
@@ -955,6 +986,7 @@ kbi2
 kbi2_bit
 kbi3
 kbi3_bit
+labs
 lata
 lata0
 lata0_bit
@@ -1048,11 +1080,19 @@ lcd_out
 lcd_out_cp
 lcd_rs
 lcd_rs_direction
+ldiv
 lfiofs
 lfiofs_bit
 longint2double
+longinttohex
+longinttostrwithzeros
 longjmp
+longtostr
 longword2double
+longwordtohex
+longwordtostr
+longwordtostrwithzeros
+ltrim
 lvdcon
 lvden
 lvden_bit
@@ -1081,6 +1121,7 @@ lvv2_bit
 lvv3
 lvv3_bit
 main
+max
 mc1out
 mc1out_bit
 mc1out_cm2con1_bit
@@ -1098,6 +1139,7 @@ mfiofs
 mfiofs_bit
 mfiosel
 mfiosel_bit
+min
 msk0
 msk0_bit
 msk0_ssp1msk_bit
@@ -1380,12 +1422,13 @@ pmd2
 por
 por_bit
 porta
+porta_ad
 porta_selected
 portb
 portb_selected
 portc
 portd
-portd_handle
+portd_led
 portd_selected
 porte
 porte_selected
@@ -1395,6 +1438,7 @@ postdec2
 postinc0
 postinc1
 postinc2
+potencia
 pr2
 pr4
 pr6
@@ -1500,6 +1544,7 @@ ra6
 ra6_bit
 ra7
 ra7_bit
+rand
 rb0
 rb0_bit
 rb1
@@ -1612,6 +1657,7 @@ ri_bit
 rsen
 rsen_bit
 rsen_ssp1con2_bit
+rtrim
 rx_
 rx__bit
 rx1
@@ -1699,6 +1745,8 @@ setfov32
 setfun32
 setiov3224
 setjmp
+shorttohex
+shorttostr
 slra
 slra_bit
 slrb
@@ -1744,6 +1792,7 @@ spen1
 spen1_bit
 spen2
 spen2_bit
+srand
 srclk0
 srclk0_bit
 srclk1
@@ -2222,9 +2271,11 @@ tmr6on
 tmr6on_bit
 to_
 to__bit
+tolower
 tosh
 tosl
 tosu
+toupper
 trigsel
 trigsel_bit
 trisa
@@ -2377,6 +2428,7 @@ txsta
 txsta1
 txsta2
 txt
+txtd
 ua
 ua_bit
 ua_ssp1stat_bit
@@ -2409,6 +2461,7 @@ uart2_write
 uart2_write_text
 uart2md
 uart2md_bit
+uldiv
 vdelay_advanced_ms
 vdelay_ms
 vdirmag
@@ -2430,6 +2483,9 @@ wcol_bit
 wcol_ssp1con1_bit
 wdtcon
 word2double
+wordtohex
+wordtostr
+wordtostrwithzeros
 wpub
 wpub0
 wpub0_bit
@@ -2455,8 +2511,10 @@ wren
 wren_bit
 wrerr
 wrerr_bit
+writelcd
 wue
 wue_baud1con_bit
 wue_bit
+xtoi
 z
 z_bit
