@@ -5,9 +5,11 @@ import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 
 import android.bluetooth.BluetoothSocket;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.ParcelUuid;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 
@@ -24,8 +26,8 @@ import java.util.ArrayList;
 import java.util.Set;
 import java.util.concurrent.locks.Lock;
 
-public class MainActivity extends Activity {
-    Button b1, b2, b3, b4, b5, b6,portD,portA;
+public class MainActivity extends AppCompatActivity {
+    Button b1, b2, b3, b4, b5, b6,portD,portA,timer;
     private BluetoothAdapter BA;
     private Set<BluetoothDevice> pairedDevices;
     ListView lv;
@@ -36,6 +38,7 @@ public class MainActivity extends Activity {
     public Object[] devices;
     public ParcelUuid[] uuids;
     public BluetoothDevice device;
+    static Thread bluetoothCom;
 
     public OutputStream outputStream;
     public InputStream inputStream;
@@ -47,13 +50,16 @@ public class MainActivity extends Activity {
 
         b1 = (Button) findViewById(R.id.button);
         b2 = (Button) findViewById(R.id.button2);
-        b3 = (Button) findViewById(R.id.button3);
+        //b3 = (Button) findViewById(R.id.button3);
         b4 = (Button) findViewById(R.id.button4);
         b5 = (Button) findViewById(R.id.button5);
         portD = (Button) findViewById(R.id.btnPortD);
         portA = (Button) findViewById(R.id.btnPortA);
+        timer = (Button) findViewById(R.id.btnTimer);
 
-
+        timer.setOnClickListener(timer_control());
+        portD.setOnClickListener(portD_control());
+        //portA.setOnClickListener(portA_control());
 
         b5.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -61,7 +67,7 @@ public class MainActivity extends Activity {
                 if (pairedDevices.size() > 0) {
                     devices = (Object[]) pairedDevices.toArray();
 
-                    Thread bluetoothCom = new Thread(new Comunicacao(devices));
+                    bluetoothCom = new Thread(new Comunicacao(devices));
                     bluetoothCom.start();
 
                 }
@@ -71,6 +77,42 @@ public class MainActivity extends Activity {
         BA = BluetoothAdapter.getDefaultAdapter();
         pairedDevices = BA.getBondedDevices();
 
+    }
+
+    private View.OnClickListener timer_control() {
+        return new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Comunicacao.setOutputBuffer(null);
+                Comunicacao.setOutputBuffer("TIMER");
+                Intent port_timer = new Intent(getContext(), Timer.class);
+                startActivity(port_timer);
+            }
+        };
+    }
+
+//    private View.OnClickListener portA_control() {
+//        return new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Comunicacao.setOutputBuffer(null);
+//                Comunicacao.setOutputBuffer("VOLTIMETRO");
+//                Intent portA = new Intent(getContext(), PortA_AD.class);
+//                startActivity(portA);
+//            }
+//        };
+//    }
+
+    private View.OnClickListener portD_control() {
+        return new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Comunicacao.setOutputBuffer(null);
+                Comunicacao.setOutputBuffer("LEDS");
+                Intent portD = new Intent(getContext(), PortD_Leds.class);
+                startActivity(portD);
+            }
+        };
     }
 
     public void on(View v) {
@@ -106,15 +148,26 @@ public class MainActivity extends Activity {
         lv.setAdapter(adapter);
     }
 
-    public void portD_control(View view) throws IOException {
-        Comunicacao.setOutputBuffer("PORTD SELECTED");
-        Intent portD = new Intent(this, PortD_Leds.class);
-        startActivity(portD);
+    private Context getContext(){
+        return this;
     }
 
-    public void portA_control(View view) {
-        Comunicacao.setOutputBuffer("PORTA SELECTED");
-        Intent portA = new Intent(this, PortA_AD.class);
+    public void portA_control_2(View view) {
+        Comunicacao.setOutputBuffer(null);
+        Comunicacao.setOutputBuffer("VOLTIMETRO");
+        Intent portA = new Intent(getContext(), PortA_AD.class);
         startActivity(portA);
     }
+
+//    public void portD_control(View view) throws IOException {
+//        Comunicacao.setOutputBuffer("LEDS");
+//        Intent portD = new Intent(this, PortD_Leds.class);
+//        startActivity(portD);
+//    }
+//
+//    public void portA_control(View view) {
+//        Comunicacao.setOutputBuffer("VOLTIMETRO");
+//        Intent portA = new Intent(this, PortA_AD.class);
+//        startActivity(portA);
+//    }
 }

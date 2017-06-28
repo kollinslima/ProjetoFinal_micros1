@@ -37,6 +37,9 @@ public class PortD_Leds extends AppCompatActivity {
         led6 = (ToggleButton) findViewById(R.id.btnLed6);
         led7 = (ToggleButton) findViewById(R.id.btnLed7);
 
+        Button finishLED = (Button) findViewById(R.id.finishLED);
+        finishLED.setOnClickListener(terminaLED());
+
         led0.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -166,10 +169,14 @@ public class PortD_Leds extends AppCompatActivity {
         });
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        Comunicacao.setOutputBuffer("finishD");
+    private View.OnClickListener terminaLED() {
+        return new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Comunicacao.setOutputBuffer("finishLED");
+                finish();
+            }
+        };
     }
 
     private String convertDecimal(int status) {

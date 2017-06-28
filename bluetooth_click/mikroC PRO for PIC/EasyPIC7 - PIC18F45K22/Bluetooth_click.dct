@@ -794,6 +794,8 @@ ferr1
 ferr1_bit
 ferr2
 ferr2_bit
+finishled
+finishvolt
 fixsign32
 floattostr
 flt0
@@ -1081,6 +1083,7 @@ lcd_out_cp
 lcd_rs
 lcd_rs_direction
 ldiv
+leds
 lfiofs
 lfiofs_bit
 longint2double
@@ -1423,15 +1426,11 @@ por
 por_bit
 porta
 porta_ad
-porta_selected
 portb
-portb_selected
 portc
 portd
 portd_led
-portd_selected
 porte
-porte_selected
 postdec0
 postdec1
 postdec2
@@ -1648,6 +1647,8 @@ re2
 re2_bit
 re3
 re3_bit
+reload_tmr0h
+reload_tmr0l
 res032
 response
 response_rcvd
@@ -2153,6 +2154,8 @@ tblptrl
 tblptru
 tgen
 tgen_bit
+timer
+timer_selected
 tmp
 tmr0h
 tmr0ie
@@ -2271,6 +2274,7 @@ tmr6on
 tmr6on_bit
 to_
 to__bit
+toggle_timer
 tolower
 tosh
 tosl
@@ -2466,6 +2470,7 @@ vdelay_advanced_ms
 vdelay_ms
 vdirmag
 vdirmag_bit
+voltimetro
 vpp
 vpp_bit
 vrefcon0

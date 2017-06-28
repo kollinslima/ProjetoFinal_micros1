@@ -39,16 +39,16 @@
         android:layout_alignBottom="@+id/button"
         android:layout_centerHorizontal="true" />
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="List devices"
-        android:onClick="list"
-        android:id="@+id/button3"
-        android:layout_weight="1"
-        android:layout_below="@+id/imageView"
-        android:layout_toRightOf="@+id/imageView"
-        android:layout_toEndOf="@+id/imageView" />
+    <!--<Button-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:text="List devices"-->
+        <!--android:onClick="list"-->
+        <!--android:id="@+id/button3"-->
+        <!--android:layout_weight="1"-->
+        <!--android:layout_below="@+id/imageView"-->
+        <!--android:layout_toRightOf="@+id/imageView"-->
+        <!--android:layout_toEndOf="@+id/imageView" />-->
 
 </LinearLayout>
 
@@ -75,49 +75,73 @@
             android:id="@+id/button5"
             />
 
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Send"
-            android:layout_weight="1"
-            android:id="@+id/button6"
-            />
+        <!--<Button-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:text="Send"-->
+            <!--android:layout_weight="1"-->
+            <!--android:id="@+id/button6"-->
+            <!--/>-->
 
     </LinearLayout>
 
-    <Button
-        android:id="@+id/btnPortA"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="PORTA"
-        android:onClick="portA_control"/>
+        android:layout_weight="1">
 
-    <Button
-        android:id="@+id/btnPortB"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="PORTB"
-        android:onClick="portD_control"/>
+        <Button
+            android:id="@+id/btnPortA"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="Voltímetro"
+            android:layout_weight="1"
+            android:onClick="portA_control_2"/>
 
-    <Button
-        android:id="@+id/btnPortC"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="PORTC"
-        android:onClick="portD_control"/>
+        <!--<Button-->
+        <!--android:id="@+id/btnPortB"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:text="PORTB"-->
+        <!--android:onClick="portD_control"/>-->
 
-    <Button
-        android:id="@+id/btnPortD"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="PORTD"
-        android:onClick="portD_control"/>
+        <!--<Button-->
+        <!--android:id="@+id/btnPortC"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:text="PORTC"-->
+        <!--android:onClick="portD_control"/>-->
 
-    <Button
-        android:id="@+id/btnPortE"
-        android:layout_width="wrap_content"
+        <Button
+            android:id="@+id/btnPortD"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="LEDs"/>
+
+        <!--<Button-->
+        <!--android:id="@+id/btnPortE"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:text="PORTE"-->
+        <!--android:onClick="portD_control"/>-->
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="PORTE"
-        android:onClick="portD_control"/>
+        android:layout_weight="1">
+
+        <Button
+            android:id="@+id/btnTimer"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="Timer"
+            android:layout_weight="1"/>
+
+
+
+    </LinearLayout>
 
 </LinearLayout>

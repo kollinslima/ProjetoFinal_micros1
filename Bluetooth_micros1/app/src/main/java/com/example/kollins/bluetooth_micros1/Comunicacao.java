@@ -26,7 +26,10 @@ public class Comunicacao implements Runnable {
     public static InputStream inputStream;
 
     public static String OUTPUT_BUFFER = null;
+    public static String OUTPUT_BUFFER2 = null;
     public static String INPUT_BUFFER = null;
+    public static boolean enviado = true;
+
 
     public Comunicacao(Object[] devices) {
         this.devices = devices;
@@ -48,6 +51,7 @@ public class Comunicacao implements Runnable {
             while (true) {
                 if (OUTPUT_BUFFER != null) {
                     write(OUTPUT_BUFFER);
+
                     OUTPUT_BUFFER = null;
                 }
 
@@ -70,14 +74,16 @@ public class Comunicacao implements Runnable {
             getOutputStream().write(msg.getBytes());
             getOutputStream().write(FINAL);
             Log.i("Teste", "Enviado");
+            enviado = true;
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
+
     public static void read() throws IOException {
 
-        byte [] leitura = new byte[5];
+        byte[] leitura = new byte[5];
         getInputStream().read(leitura);
         Log.i("Teste", "Bytes: " + leitura);
         setInputBuffer(new String(leitura, StandardCharsets.UTF_8));
@@ -85,23 +91,24 @@ public class Comunicacao implements Runnable {
     }
 
 
-    synchronized static void setOutputBuffer (String msg){
+    synchronized static void setOutputBuffer(String msg) {
+        enviado = false;
         OUTPUT_BUFFER = msg;
     }
 
-    synchronized static void setInputBuffer (String msg){
+    synchronized static void setInputBuffer(String msg) {
         INPUT_BUFFER = msg;
     }
 
-    synchronized static String getInputBuffer (){
+    synchronized static String getInputBuffer() {
         return INPUT_BUFFER;
     }
 
-    public static OutputStream getOutputStream(){
+    public static OutputStream getOutputStream() {
         return outputStream;
     }
 
-    public static InputStream getInputStream(){
+    public static InputStream getInputStream() {
         return inputStream;
     }
 

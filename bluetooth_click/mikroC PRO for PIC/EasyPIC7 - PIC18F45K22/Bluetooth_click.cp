@@ -33,24 +33,36 @@ char BT_state;
 char response_rcvd;
 char responseID, response = 0;
 
-char porta_selected[] = "PORTA";
-char portb_selected[] = "PORTB";
+char voltimetro[] = "VOLTIMETRO";
+char leds[] = "LEDS";
+char timer[] = "TIMER";
 
-char portd_selected[] = "PORTD";
-
-char porte_selected[] = "PORTE";
+char finishLED[] = "finishLED";
+char finishVOLT[] = "finishVOLT";
 
 int portd_led = 0;
 int porta_ad = 0;
-char *adc_value[16];
+int timer_selected = 0;
+int toggle_timer = 0;
+int adc_value = 0;
 
+int reload_TMR0H = 0;
+int reload_TMR0L = 0xFF;
 
 void interrupt(){
+
+ if (TMR0IF_bit) {
+ LATD = ~PORTD;
+ TMR0IF_bit = 0;
+ TMR0H = reload_TMR0H;
+ TMR0L = reload_TMR0L;
+ }
+
  if (RCIF_bit == 1) {
  tmp = UART1_Read();
 
  if (CMD_mode){
-#line 101 "F:/Documents/PIC18f45k22/bluetooth_click/mikroC PRO for PIC/EasyPIC7 - PIC18F45K22/Bluetooth_click.c"
+#line 113 "F:/Documents/PIC18f45k22/bluetooth_click/mikroC PRO for PIC/EasyPIC7 - PIC18F45K22/Bluetooth_click.c"
  switch (BT_state) {
  case 0: {
  response = 0;
@@ -230,6 +242,17 @@ void main() {
 
  ADC_init();
 
+ T0CON = 0x04;
+
+ TMR0H = reload_TMR0H;
+ TMR0L = reload_TMR0L;
+
+ GIEH_bit = 1;
+
+ TMR0IF_bit = 0;
+ TMR0IE_bit = 1;
+
+
 
  CMD_mode = 1;
  BT_state = 0;
@@ -273,7 +296,7 @@ void main() {
  Delay_ms(1000);
 
 
- UART1_Write(13);
+
  Lcd_Cmd(_LCD_CLEAR);
  Lcd_Out(1,1,"Aguardando");
  Lcd_Out(2,1,"Comando...");
@@ -290,29 +313,49 @@ void main() {
  DataReady = 0;
 
 
- if(!memcmp(txt,porta_selected,5)){
+ if(!memcmp(txt,voltimetro,1)){
  porta_ad = 1;
  writeLCD(txt);
  }
- else if(!memcmp(txt,portd_selected,5)){
+ else if(!memcmp(txt,leds,1)){
+ LATD = 0x00;
  portd_led = 1;
  writeLCD(txt);
  }
- else if(porta_ad){
- unsigned int read = ADC_Read(0);
- read = ((read*50.0)/1023) * 10;
- WordToStr(read,adc_value);
- UART1_Write_Text(adc_value);
+ else if(!memcmp(txt,timer,1)){
+ timer_selected = 1;
+ T0CON = 0x84;
+ writeLCD(txt);
  }
- else if(portd_led){
- LATD = convertToInt(txt);
- }
- else {
+ else if(!memcmp(txt,finishLED,7)){
  portd_led = 0;
+ LATD = 0x00;
+ Lcd_Cmd(_LCD_CLEAR);
+ Lcd_Out(1,1,"Aguardando");
+ Lcd_Out(2,1,"Comando...");
+ }
+ else if(!memcmp(txt,finishVOLT,7)){
+ porta_ad = 0;
  Lcd_Cmd(_LCD_CLEAR);
  Lcd_Out(1,1,"Aguardando");
  Lcd_Out(2,1,"Comando...");
  }
 
+ else{
+ if(porta_ad){
+ unsigned int read = ADC_Read(0);
+ read = ((read*33.0)/1023) * 10;
+ WordToStr(read,adc_value);
+
+ UART1_Write_Text(adc_value);
+ UART1_Write(13);
  }
-}
+ else if(portd_led){
+ LATD = convertToInt(txt);
+ }
+ else if(timer_selected){
+
+ reload_TMR0H = convertToInt(txt);
+ }
+ }
+ }}
