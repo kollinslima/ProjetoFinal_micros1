@@ -39,16 +39,7 @@
         android:layout_alignBottom="@+id/button"
         android:layout_centerHorizontal="true" />
 
-    <!--<Button-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:text="List devices"-->
-        <!--android:onClick="list"-->
-        <!--android:id="@+id/button3"-->
-        <!--android:layout_weight="1"-->
-        <!--android:layout_below="@+id/imageView"-->
-        <!--android:layout_toRightOf="@+id/imageView"-->
-        <!--android:layout_toEndOf="@+id/imageView" />-->
+
 
 </LinearLayout>
 
@@ -75,13 +66,6 @@
             android:id="@+id/button5"
             />
 
-        <!--<Button-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:text="Send"-->
-            <!--android:layout_weight="1"-->
-            <!--android:id="@+id/button6"-->
-            <!--/>-->
 
     </LinearLayout>
 
@@ -95,22 +79,9 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:text="Voltímetro"
-            android:layout_weight="1"
-            android:onClick="portA_control_2"/>
+            android:layout_weight="1"/>
 
-        <!--<Button-->
-        <!--android:id="@+id/btnPortB"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:text="PORTB"-->
-        <!--android:onClick="portD_control"/>-->
 
-        <!--<Button-->
-        <!--android:id="@+id/btnPortC"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:text="PORTC"-->
-        <!--android:onClick="portD_control"/>-->
 
         <Button
             android:id="@+id/btnPortD"
@@ -119,12 +90,7 @@
             android:layout_weight="1"
             android:text="LEDs"/>
 
-        <!--<Button-->
-        <!--android:id="@+id/btnPortE"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:text="PORTE"-->
-        <!--android:onClick="portD_control"/>-->
+
 
     </LinearLayout>
 

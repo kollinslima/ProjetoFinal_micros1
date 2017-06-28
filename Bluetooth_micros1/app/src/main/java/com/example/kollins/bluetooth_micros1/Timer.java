@@ -14,6 +14,7 @@ public class Timer extends AppCompatActivity {
 
     Button finalizaTimer;
     SeekBar seekTimer;
+    Thread progress_listener;
 
     boolean enable_listener = false;
 
@@ -36,10 +37,10 @@ public class Timer extends AppCompatActivity {
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
 
                 final int progress_T = progress;
-                new Thread(new Runnable() {
+                progress_listener = new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        int timer_value = (int) ((65353 * (progress_T / 100.0)) + 1);
+                        int timer_value = (int) ((65353 * (progress_T / 100.0)));
 
                         int timer_L = 0;
                         int timer_H = 0;
@@ -58,17 +59,13 @@ public class Timer extends AppCompatActivity {
                         Log.i("Teste", "Low: " + timer_L);
                         Log.i("Teste", "Hight: " + timer_H);
 
-
-//                        Comunicacao.setOutputBuffer("L");
-//                        while (!Comunicacao.enviado);
-//                        Comunicacao.setOutputBuffer(String.valueOf(timer_L));
-//                        while (!Comunicacao.enviado);
-//                        Comunicacao.setOutputBuffer("H");
-//                        while (!Comunicacao.enviado);
+                        while (!Comunicacao.enviado);
                         Comunicacao.setOutputBuffer(String.valueOf(timer_H));
 
                     }
-                }).start();
+                });
+
+                progress_listener.start();
 
             }
 
@@ -88,6 +85,12 @@ public class Timer extends AppCompatActivity {
         return new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                try {
+                    progress_listener.join();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                //while (!Comunicacao.enviado);
                 Comunicacao.setOutputBuffer("finishTIMER");
                 finish();
             }

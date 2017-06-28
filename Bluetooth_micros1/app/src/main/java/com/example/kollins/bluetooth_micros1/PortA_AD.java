@@ -34,47 +34,8 @@ public class PortA_AD extends AppCompatActivity {
 
         tensao = (TextView) findViewById(R.id.tensao);
         finalizar = (Button) findViewById(R.id.finalizaA);
-        //ler_tensao = (Button) findViewById(R.id.ler_tensao);
 
         finalizar.setOnClickListener(terminaVoltimetro());
-//        finalizar.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                continua = false;
-//                Comunicacao.setOutputBuffer("finishA");
-//                finish();
-//            }
-//        });
-
-//        ler_tensao.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Comunicacao.setInputBuffer(null);
-//                Comunicacao.setOutputBuffer("leitura_ad");
-//                try {
-//                    Comunicacao.read();
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                }
-//
-//                while(Comunicacao.getInputBuffer() == null){
-//                    try {
-//                        Thread.sleep(500);
-//                        Comunicacao.setOutputBuffer("leitura_ad");
-//                        Comunicacao.read();
-//                    } catch (IOException e) {
-//                        e.printStackTrace();
-//                    } catch (InterruptedException e) {
-//                        e.printStackTrace();
-//                    }
-//                }
-//
-//                String valorAD = new String(Comunicacao.getInputBuffer());
-//
-//                tensao.setText(valorAD);
-//
-//            }
-//        });
 
         voltimetro = new Thread() {
 
@@ -82,6 +43,9 @@ public class PortA_AD extends AppCompatActivity {
             public void run() {
                 while (continua) {
                     zero = false;
+                    Comunicacao.setInputBuffer(null);
+
+                    while (!Comunicacao.enviado);
                     Comunicacao.setOutputBuffer("leitura_ad");
 
                     try {
@@ -91,10 +55,11 @@ public class PortA_AD extends AppCompatActivity {
                     }
 
                     do {
-                        Comunicacao.setInputBuffer(null);
+
                         while (Comunicacao.getInputBuffer() == null) {
                             try {
                                 Thread.sleep(500);
+                                while (!Comunicacao.enviado);
                                 Comunicacao.setOutputBuffer("leitura_ad");
                                 Comunicacao.read();
                             } catch (IOException e) {
@@ -141,6 +106,7 @@ public class PortA_AD extends AppCompatActivity {
         return new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //while (!Comunicacao.enviado);
                 continua = false;
                 try {
                     voltimetro.join();

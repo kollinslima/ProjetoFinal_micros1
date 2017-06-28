@@ -38,7 +38,7 @@ public class MainActivity extends AppCompatActivity {
     public Object[] devices;
     public ParcelUuid[] uuids;
     public BluetoothDevice device;
-    static Thread bluetoothCom;
+    Thread bluetoothCom;
 
     public OutputStream outputStream;
     public InputStream inputStream;
@@ -50,7 +50,6 @@ public class MainActivity extends AppCompatActivity {
 
         b1 = (Button) findViewById(R.id.button);
         b2 = (Button) findViewById(R.id.button2);
-        //b3 = (Button) findViewById(R.id.button3);
         b4 = (Button) findViewById(R.id.button4);
         b5 = (Button) findViewById(R.id.button5);
         portD = (Button) findViewById(R.id.btnPortD);
@@ -59,7 +58,7 @@ public class MainActivity extends AppCompatActivity {
 
         timer.setOnClickListener(timer_control());
         portD.setOnClickListener(portD_control());
-        //portA.setOnClickListener(portA_control());
+        portA.setOnClickListener(portA_control());
 
         b5.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -83,7 +82,7 @@ public class MainActivity extends AppCompatActivity {
         return new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Comunicacao.setOutputBuffer(null);
+                while (!Comunicacao.enviado);
                 Comunicacao.setOutputBuffer("TIMER");
                 Intent port_timer = new Intent(getContext(), Timer.class);
                 startActivity(port_timer);
@@ -91,23 +90,23 @@ public class MainActivity extends AppCompatActivity {
         };
     }
 
-//    private View.OnClickListener portA_control() {
-//        return new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Comunicacao.setOutputBuffer(null);
-//                Comunicacao.setOutputBuffer("VOLTIMETRO");
-//                Intent portA = new Intent(getContext(), PortA_AD.class);
-//                startActivity(portA);
-//            }
-//        };
-//    }
+    private View.OnClickListener portA_control() {
+        return new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                while (!Comunicacao.enviado);
+                Comunicacao.setOutputBuffer("VOLTIMETRO");
+                Intent portA = new Intent(getContext(), PortA_AD.class);
+                startActivity(portA);
+            }
+        };
+    }
 
     private View.OnClickListener portD_control() {
         return new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Comunicacao.setOutputBuffer(null);
+                while (!Comunicacao.enviado);
                 Comunicacao.setOutputBuffer("LEDS");
                 Intent portD = new Intent(getContext(), PortD_Leds.class);
                 startActivity(portD);
@@ -136,38 +135,9 @@ public class MainActivity extends AppCompatActivity {
         startActivityForResult(getVisible, 0);
     }
 
-    public void list(View v) {
-
-        ArrayList list = new ArrayList();
-
-        for (BluetoothDevice bt : pairedDevices) list.add(bt.getName());
-        Toast.makeText(getApplicationContext(), "Showing Paired Devices", Toast.LENGTH_SHORT).show();
-
-        final ArrayAdapter adapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, list);
-
-        lv.setAdapter(adapter);
-    }
 
     private Context getContext(){
         return this;
     }
 
-    public void portA_control_2(View view) {
-        Comunicacao.setOutputBuffer(null);
-        Comunicacao.setOutputBuffer("VOLTIMETRO");
-        Intent portA = new Intent(getContext(), PortA_AD.class);
-        startActivity(portA);
-    }
-
-//    public void portD_control(View view) throws IOException {
-//        Comunicacao.setOutputBuffer("LEDS");
-//        Intent portD = new Intent(this, PortD_Leds.class);
-//        startActivity(portD);
-//    }
-//
-//    public void portA_control(View view) {
-//        Comunicacao.setOutputBuffer("VOLTIMETRO");
-//        Intent portA = new Intent(this, PortA_AD.class);
-//        startActivity(portA);
-//    }
 }
