@@ -39,15 +39,16 @@ char timer[] = "TIMER";
 
 char finishLED[] = "finishLED";
 char finishVOLT[] = "finishVOLT";
+char finishTIMER[] = "finishTIMER";
 
 int portd_led = 0;
 int porta_ad = 0;
 int timer_selected = 0;
 int toggle_timer = 0;
-int adc_value = 0;
+char adc_value[6];
 
 int reload_TMR0H = 0;
-int reload_TMR0L = 0xFF;
+int reload_TMR0L = 0;
 
 void interrupt(){
 
@@ -62,7 +63,7 @@ void interrupt(){
  tmp = UART1_Read();
 
  if (CMD_mode){
-#line 113 "F:/Documents/PIC18f45k22/bluetooth_click/mikroC PRO for PIC/EasyPIC7 - PIC18F45K22/Bluetooth_click.c"
+#line 114 "F:/Documents/PIC18f45k22/bluetooth_click/mikroC PRO for PIC/EasyPIC7 - PIC18F45K22/Bluetooth_click.c"
  switch (BT_state) {
  case 0: {
  response = 0;
@@ -242,7 +243,7 @@ void main() {
 
  ADC_init();
 
- T0CON = 0x04;
+ T0CON = 0x47;
 
  TMR0H = reload_TMR0H;
  TMR0L = reload_TMR0L;
@@ -324,7 +325,7 @@ void main() {
  }
  else if(!memcmp(txt,timer,1)){
  timer_selected = 1;
- T0CON = 0x84;
+ T0CON = 0xC7;
  writeLCD(txt);
  }
  else if(!memcmp(txt,finishLED,7)){
@@ -336,6 +337,12 @@ void main() {
  }
  else if(!memcmp(txt,finishVOLT,7)){
  porta_ad = 0;
+ Lcd_Cmd(_LCD_CLEAR);
+ Lcd_Out(1,1,"Aguardando");
+ Lcd_Out(2,1,"Comando...");
+ }
+ else if(!memcmp(txt,finishTIMER,7)){
+ T0CON = 0x47;
  Lcd_Cmd(_LCD_CLEAR);
  Lcd_Out(1,1,"Aguardando");
  Lcd_Out(2,1,"Comando...");
@@ -355,7 +362,7 @@ void main() {
  }
  else if(timer_selected){
 
- reload_TMR0H = convertToInt(txt);
+ reload_TMR0L = convertToInt(txt);
  }
  }
  }}

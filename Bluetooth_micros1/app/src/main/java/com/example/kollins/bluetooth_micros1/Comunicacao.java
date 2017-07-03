@@ -83,7 +83,7 @@ public class Comunicacao implements Runnable {
 
     public static void read() throws IOException {
 
-        byte[] leitura = new byte[5];
+        byte[] leitura = new byte[7];
         getInputStream().read(leitura);
         Log.i("Teste", "Bytes: " + leitura);
         setInputBuffer(new String(leitura, StandardCharsets.UTF_8));

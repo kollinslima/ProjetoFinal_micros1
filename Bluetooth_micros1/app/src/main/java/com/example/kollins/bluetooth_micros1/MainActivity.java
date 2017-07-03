@@ -82,7 +82,7 @@ public class MainActivity extends AppCompatActivity {
         return new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                while (!Comunicacao.enviado);
+                //while (!Comunicacao.enviado);
                 Comunicacao.setOutputBuffer("TIMER");
                 Intent port_timer = new Intent(getContext(), Timer.class);
                 startActivity(port_timer);
@@ -94,8 +94,9 @@ public class MainActivity extends AppCompatActivity {
         return new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                while (!Comunicacao.enviado);
+                //while (!Comunicacao.enviado);
                 Comunicacao.setOutputBuffer("VOLTIMETRO");
+                while (!Comunicacao.enviado);
                 Intent portA = new Intent(getContext(), PortA_AD.class);
                 startActivity(portA);
             }
@@ -106,7 +107,7 @@ public class MainActivity extends AppCompatActivity {
         return new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                while (!Comunicacao.enviado);
+                //while (!Comunicacao.enviado);
                 Comunicacao.setOutputBuffer("LEDS");
                 Intent portD = new Intent(getContext(), PortD_Leds.class);
                 startActivity(portD);

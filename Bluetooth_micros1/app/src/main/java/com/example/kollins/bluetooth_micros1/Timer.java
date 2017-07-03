@@ -40,27 +40,30 @@ public class Timer extends AppCompatActivity {
                 progress_listener = new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        int timer_value = (int) ((65353 * (progress_T / 100.0)));
 
-                        int timer_L = 0;
-                        int timer_H = 0;
+                        if(Comunicacao.enviado) {
 
-                        for (int i = 0; i < timer_value; i++) {
-                            timer_L = (timer_L + 1) % 256;
+                            int timer_value = (int) ((255 * (progress_T / 100.0)));
 
-                            if (timer_L == 0) {
-                                timer_H = (timer_H + 1) % 256;
+                            int timer_L = 0;
+                            //int timer_H = 0;
+
+                            for (int i = 0; i < timer_value; i++) {
+                                timer_L = (timer_L + 1) % 256;
+
+//                            if (timer_L == 0) {
+//                                timer_H = (timer_H + 1) % 256;
+//                            }
                             }
+
+                            Log.i("Teste", "Progress: " + progress_T);
+                            Log.i("Teste", "SeekBar: " + timer_value);
+
+                            Log.i("Teste", "Low: " + timer_L);
+                            //Log.i("Teste", "Hight: " + timer_H);
+
+                            Comunicacao.setOutputBuffer(String.valueOf(timer_L));
                         }
-
-                        Log.i("Teste", "Progress: " + progress_T);
-                        Log.i("Teste", "SeekBar: " + timer_value);
-
-                        Log.i("Teste", "Low: " + timer_L);
-                        Log.i("Teste", "Hight: " + timer_H);
-
-                        while (!Comunicacao.enviado);
-                        Comunicacao.setOutputBuffer(String.valueOf(timer_H));
 
                     }
                 });

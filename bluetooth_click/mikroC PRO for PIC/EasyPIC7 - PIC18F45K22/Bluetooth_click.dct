@@ -795,6 +795,7 @@ ferr1_bit
 ferr2
 ferr2_bit
 finishled
+finishtimer
 finishvolt
 fixsign32
 floattostr

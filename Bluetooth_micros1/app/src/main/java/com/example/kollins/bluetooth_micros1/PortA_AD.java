@@ -19,7 +19,7 @@ public class PortA_AD extends AppCompatActivity {
 
     TextView tensao;
     Thread voltimetro;
-    Button finalizar;
+    Button finalizar, lerAD;
 
     static String info;
     static String numbers;
@@ -35,6 +35,28 @@ public class PortA_AD extends AppCompatActivity {
         tensao = (TextView) findViewById(R.id.tensao);
         finalizar = (Button) findViewById(R.id.finalizaA);
 
+//        lerAD = (Button) findViewById(R.id.lerAD);
+//
+//        lerAD.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//
+//                Comunicacao.setInputBuffer(null);
+//                Comunicacao.setOutputBuffer("leitura_ad");
+//                while (!Comunicacao.enviado) ;
+//
+//                try {
+//                    Comunicacao.read();
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
+//
+//                if (Comunicacao.getInputBuffer() != null) {
+//                    Log.i("Teste", "ValorLido: " + Comunicacao.getInputBuffer());
+//                }
+//            }
+//        });
+
         finalizar.setOnClickListener(terminaVoltimetro());
 
         voltimetro = new Thread() {
@@ -42,41 +64,39 @@ public class PortA_AD extends AppCompatActivity {
             @Override
             public void run() {
                 while (continua) {
-                    zero = false;
-                    Comunicacao.setInputBuffer(null);
-
-                    while (!Comunicacao.enviado);
-                    Comunicacao.setOutputBuffer("leitura_ad");
-
-                    try {
-                        Comunicacao.read();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
 
                     do {
+                        Log.i("Teste","preso1");
+                        zero = false;
+                        Comunicacao.setInputBuffer(null);
+                        Comunicacao.setOutputBuffer("leitura_ad");
+                        while(!Comunicacao.enviado);
 
-                        while (Comunicacao.getInputBuffer() == null) {
+                        try {
+                            Comunicacao.read();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+
+                        if(Comunicacao.getInputBuffer() != null) {
+                            Log.i("Teste", "Leitura sucesso");
+                            info = new String(Comunicacao.getInputBuffer());
+                            Log.i("Teste", "ValorLido: " + info);
+                            numbers = extractDigits(info);
+
+                            try {
+                                if (Integer.valueOf(numbers) == 0)
+                                    zero = true;
+                            } catch (NumberFormatException e) {
+                                zero = false;
+                            }
+                        }
+                        else{
                             try {
                                 Thread.sleep(500);
-                                while (!Comunicacao.enviado);
-                                Comunicacao.setOutputBuffer("leitura_ad");
-                                Comunicacao.read();
-                            } catch (IOException e) {
-                                e.printStackTrace();
                             } catch (InterruptedException e) {
                                 e.printStackTrace();
                             }
-                        }
-
-                        info = new String(Comunicacao.getInputBuffer());
-                        numbers = extractDigits(info);
-
-                        try {
-                            if (Integer.valueOf(numbers) == 0)
-                                zero = true;
-                        }catch (NumberFormatException e){
-                                zero = false;
                         }
 
                     }while (numbers.length()<2 && !zero);
@@ -94,6 +114,12 @@ public class PortA_AD extends AppCompatActivity {
 
                         }
                     });
+
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         };
